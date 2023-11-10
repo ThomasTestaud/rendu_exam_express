@@ -19,6 +19,14 @@ const Product = sequelizeInstance.define('Product', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    seenAmount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+    },
+    boughtAmount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+    },
 }, {
     
 });

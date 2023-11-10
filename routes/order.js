@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
 const { Order } = require('../models/index.js');
-const { Cart, Product, Details, User, Popularity } = require('../models/index.js');
+const { Cart, Product, Details, User } = require('../models/index.js');
 const authorization = require('../middlewares/authorization.js');
 const adminAuthorization = require('../middlewares/admin_authorization.js');
 
@@ -83,12 +83,14 @@ router.post('/', async (req, res) => {
                 }
             });
 
-            // Update bought popularity
-            await Popularity.increment('boughtAmount', {
+            // Update boughtAmount by the amount of bought products
+            await Product.increment('boughtAmount', {
+                by: item.quantity,
                 where: {
-                    ProductId: item.Product.id
+                    id: item.Product.id
                 }
             });
+            
         }
 
         //res.json(createdOrder);

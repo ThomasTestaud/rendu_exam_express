@@ -5,7 +5,6 @@ const Tags = require('./tags.js');
 const Cart = require('./cart.js');
 const Order = require('./order.js');
 const Details = require('./orderDetails.js');
-const Popularity = require('./popularity.js');
 
 //Relations
 Product.belongsToMany(Tags, {through: 'ProductTags'});
@@ -23,11 +22,9 @@ Order.hasMany(Details);
 Details.belongsTo(Order);
 Details.belongsTo(Product);
 
-Popularity.belongsTo(Product);
-Product.hasOne(Popularity);
 
 //Sync
-sequelizeInstance.sync({force: true});
+sequelizeInstance.sync({alter: true});
 
 module.exports = {
     User,
@@ -36,5 +33,4 @@ module.exports = {
     Cart,
     Order,
     Details,
-    Popularity,
 };

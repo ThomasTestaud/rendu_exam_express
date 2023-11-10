@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelizeInstance = require('./__sequelize.js');
+const sequelizeInstance = require('./_database.js');
 const bcrypt = require('bcrypt');
 
 
@@ -26,6 +26,11 @@ const User = sequelizeInstance.define('User', {
         set(value) {
             this.setDataValue('password', bcrypt.hashSync(value, 12));
         },
+    },
+    role: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        defaultValue: 'user',
     },
 }, {
     indexes: [

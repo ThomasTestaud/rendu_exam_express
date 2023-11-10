@@ -84,7 +84,7 @@ router.post('/', async (req, res) => {
             });
         }
 
-        res.json(createdOrder);
+        //res.json(createdOrder);
 
         // Send email by redirection to /orderConfirm/:id
         res.redirect(`/mail/orderConfirm/${createdOrder.id}`);

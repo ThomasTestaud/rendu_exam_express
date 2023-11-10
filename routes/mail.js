@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
-const { Details } = require('../models/index.js');
+const { Order, Details, Product } = require('../models/index.js');
 const authorization = require('../middlewares/authorization.js');
 const sendEmail = require('../utils/mailer.js');
 
@@ -12,30 +12,32 @@ router.get('/orderConfirm/:id', async (req, res) => {
 
     const orderId = req.params.id;
 
-    // Get order details
-    const orderDetails = await Details.findAll({
-        where: {
-            OrderId: orderId
-        },
-        include: {
-            model: Product
-        }
-    });
-
-    res.json('Order confirmed!   ' + orderDetails);
-
-    // Send email
-    const toEmail = req.user.email;
-    const subject = 'Order confirmation';
-    const text = 'This is a test email from Nodemailer.';
-
-    sendEmail(toEmail, subject, text)
-        .then(() => {
-            console.log('Email sent successfully');
-        })
-        .catch((error) => {
-            console.error('Error sending email:', error);
+    try {
+        // Get order details
+        const order = await Order.findOne({
+            where: {
+                id: orderId
+            },
         });
+
+        if (!order) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+
+        // Send email
+        const toEmail = req.user.email;
+        const subject = 'Order confirmation';
+        const text = `Hello ${req.user.username}, your order for a total of ${order.total}€ has been confirmed! It will be shipped at ${order.address} as soon as possible!`;
+
+        await sendEmail(toEmail, subject, text);
+
+        console.log('Order confirmed and email sent successfully');
+        res.json({ msg: 'Order confirmed!', order: order });
+    } catch (error) {
+        console.error('Error processing order:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+
 });
 
 

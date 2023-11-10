@@ -31,11 +31,12 @@ router.get('/orderConfirm/:id', async (req, res) => {
 
         await sendEmail(toEmail, subject, text);
 
-        console.log('Order confirmed and email sent successfully');
+        
         res.json({ msg: 'Order confirmed!', order: order });
+
     } catch (error) {
-        console.error('Error processing order:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500)
+        res.json(error);
     }
 
 });

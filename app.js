@@ -14,6 +14,7 @@ const cartRouter = require('./routes/cart');
 const orderRouter = require('./routes/order');
 const adminRouter = require('./routes/admin');
 const mailRouter = require('./routes/mail');
+const popularityRouter = require('./routes/popularity');
 
 var app = express();
 
@@ -31,6 +32,7 @@ app.use('/cart', cartRouter);
 app.use('/order', orderRouter);
 app.use('/admin', adminRouter);
 app.use('/mail', mailRouter);
+app.use('/popularity', popularityRouter);
 
   
 module.exports = app;

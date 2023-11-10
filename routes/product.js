@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
-const { Product, Tags } = require('../models/index.js');
+const { Product, Tags, Popularity } = require('../models/index.js');
 const authorization = require('../middlewares/authorization.js');
 const adminAuthorization = require('../middlewares/admin_authorization.js');
 
@@ -66,14 +66,18 @@ router.get('/', async function (req, res, next) {
 
 router.get('/:id', function (req, res, next) {
 
-  Product.findByPk(req.params.id).then(product => {
-
-    if (!product) {
-      res.json('false');
-    } else {
+  Product.findByPk(req.params.id)
+    .then(product => {
+      
+      // Add one to seen popularity
+      Popularity.increment('seenAmount', {
+        where: {
+          ProductId: req.params.id
+        }
+      });
+      
       res.json(product);
-    }
-  })
+    })
     .catch((error) => {
       res.status(500);
       res.json(error);
